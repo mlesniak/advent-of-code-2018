@@ -5,4 +5,4 @@ Setup
     npm install @types/node
     tsc --init
 
-    ts-node-dev --respawn --transpileOnly main.ts
+    ts-node-dev --respawn --transpileOnly --clear main.ts
