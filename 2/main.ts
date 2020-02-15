@@ -1,7 +1,7 @@
 // Day 1
 import fs from 'fs'
 
-type Lines = Array<string>
+type Lines = string[]
 
 function load(): Lines {
     const input = fs.readFileSync('input.txt', 'utf-8')
@@ -30,19 +30,14 @@ function part1() {
     console.log(result)
 }
 
-function part2() { 
-
-}
-
 part1()
 // part2()
 
 function countLetters(s: string, count: number): number {
-    let counter = new Map<string, number>()
+    const counter = new Map<string, number>()
 
     // Build map.
-    for (let i = 0; i < s.length; i++) {
-        let c = s[i]
+    for (const c of s) {
         let cur = counter.get(c)
         if (cur === undefined) {
             cur = 0
@@ -51,12 +46,12 @@ function countLetters(s: string, count: number): number {
     }
 
     // Check count.
-    let c = 0
-    for (let v of counter.values()) {
+    let counts = 0
+    for (const v of counter.values()) {
         if (v === count) {
-            c++
+            counts++
         }
     }
 
-    return c
+    return counts
 }

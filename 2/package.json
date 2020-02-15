@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Setup",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "@types/node": "^13.7.1"
+  },
   "devDependencies": {
     "tslint": "^6.0.0",
     "typescript": "^3.7.5"
