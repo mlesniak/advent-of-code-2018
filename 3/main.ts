@@ -1,6 +1,10 @@
 // Day 1
 import fs from 'fs'
 
+function log(msg: string): void {
+    console.log(msg)
+}
+
 interface Claim {
     id: string
     x: number
@@ -14,6 +18,7 @@ type Claims = Claim[]
 function load(): Claims {
     const input = fs.readFileSync('input.txt', 'utf-8')
     return input.split("\n")
+        // .slice(0, 1) // For testing...
         .filter(line => line.length > 0)
         .map(line => toClaim(line))
 }
@@ -39,17 +44,40 @@ function toClaim(line: string): Claim {
     }
 }
 
-let c = load()
-console.log(c[0])
+let fabrics = load()
+// console.log(c[0])
 
 // Define a 2D array for storing values.
-let area: number[][] = new Array()
-const size = 10
+// Cache behaviour in TS/JS?
+let area: number[][] = []
+const size = 1000
 for (let x = 0; x < size; x++) {
-    area[x] = new Array()
+    area[x] = []
     for (let y = 0; y < size; y++) {
         area[x][y] = 0
     }
 }
 
-console.log(area)
+// Iterate over all entries and fill array.
+for (const fabric of fabrics) {
+    // log(`Processing ${JSON.stringify(fabric)}`)
+    for (let x = fabric.x; x < fabric.x + fabric.width; x++) {
+        for (let y = fabric.y; y < fabric.y + fabric.height; y++) {
+            // log(`x=${x}/y=${y}`)
+            area[x][y]++
+        }
+    }
+}
+
+// Check how many inches overlap.
+// TODO filter approach over for-of loop?
+let overlap = 0
+for (let x = 0; x < size; x++) {
+    for (let y = 0; y < size; y++) {
+        if (area[x][y] > 1) {
+            overlap++
+        }
+    }
+}
+log(`Overlap ${overlap}`)
+
