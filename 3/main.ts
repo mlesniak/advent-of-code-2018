@@ -93,7 +93,7 @@ function part2() {
     // Each element consists of a list of fabrics at this place.
     // Cache behaviour in TS/JS?
     const area: fabs[][] = []
-    const size = 10
+    const size = 1000
     for (let x = 0; x < size; x++) {
         area[x] = []
         for (let y = 0; y < size; y++) {
