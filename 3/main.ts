@@ -25,7 +25,7 @@ function toClaim(line: string): Claim {
     const id = ps[0].substring(1)
     const xy = ps[2].split(",")
     const x = Number(xy[0])
-    const y = Number(xy[1].substr(0, xy[1].length -1))
+    const y = Number(xy[1].substr(0, xy[1].length - 1))
     const wh = ps[3].split("x")
     const width = Number(wh[0])
     const height = Number(wh[1])
@@ -41,3 +41,15 @@ function toClaim(line: string): Claim {
 
 let c = load()
 console.log(c[0])
+
+// Define a 2D array for storing values.
+let area: number[][] = new Array()
+const size = 10
+for (let x = 0; x < size; x++) {
+    area[x] = new Array()
+    for (let y = 0; y < size; y++) {
+        area[x][y] = 0
+    }
+}
+
+console.log(area)
