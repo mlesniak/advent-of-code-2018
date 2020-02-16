@@ -30,8 +30,49 @@ function part1() {
     console.log(result)
 }
 
-part1()
-// part2()
+function part2() {
+    const lines = load()
+
+    for(const line1 of lines) {
+        for(const line2 of lines) {
+            if (line1 === line2) {
+                continue
+            }
+            const c = checkIds(line1, line2)
+            if (c.numDifferences === 1) {
+                console.log(c.sameChars)
+                return
+            }
+        }
+    }
+}
+
+// part1()
+part2()
+
+interface CheckResult {
+    numDifferences: number
+    sameChars: string
+}
+
+function checkIds(line1: string, line2: string): CheckResult {
+    let numDifferences = 0
+    let sameChars = ''
+
+    for(let i = 0; i < line1.length; i++) {
+        if (line1[i] !== line2[i]) {
+            numDifferences++
+        } else {
+            sameChars += line1[i]
+        }
+    }
+
+    return {
+        numDifferences,
+        sameChars
+    }
+}
+
 
 function countLetters(s: string, count: number): number {
     const counter = new Map<string, number>()
