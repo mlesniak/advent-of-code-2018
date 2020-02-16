@@ -102,7 +102,7 @@ function part2() {
     }
 
     // Remember all ids which had no collision yet.
-    let noColl = new Set<string>()
+    const noColl = new Set<string>()
     for (const fabric of fabrics) {
         noColl.add(fabric.id)
     }
@@ -125,5 +125,3 @@ function part2() {
 
     log(noColl)
 }
-
-part2()
