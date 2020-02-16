@@ -1,7 +1,7 @@
 // Day 1
 import fs from 'fs'
 
-function log(msg: string): void {
+function log(msg: any): void {
     console.log(msg)
 }
 
@@ -83,4 +83,47 @@ function part1() {
     log(`Overlap ${overlap}`)
 }
 
-part1()
+function part2() {
+    const fabrics = load()
+    // console.log(c[0])
+
+    type fabs = string[]
+
+    // Define a 2D array for storing values.
+    // Each element consists of a list of fabrics at this place.
+    // Cache behaviour in TS/JS?
+    const area: fabs[][] = []
+    const size = 10
+    for (let x = 0; x < size; x++) {
+        area[x] = []
+        for (let y = 0; y < size; y++) {
+            area[x][y] = []
+        }
+    }
+
+    // Remember all ids which had no collision yet.
+    let noColl = new Set<string>()
+    for (const fabric of fabrics) {
+        noColl.add(fabric.id)
+    }
+
+    // Iterate over all entries and fill array.
+    for (const fabric of fabrics) {
+        // log(`Processing ${JSON.stringify(fabric)}`)
+        for (let x = fabric.x; x < fabric.x + fabric.width; x++) {
+            for (let y = fabric.y; y < fabric.y + fabric.height; y++) {
+                // log(`x=${x}/y=${y}`)
+                area[x][y].push(fabric.id)
+                if (area[x][y].length > 1) {
+                    area[x][y].forEach(id => {
+                        noColl.delete(id)
+                    })
+                }
+            }
+        }
+    }
+
+    log(noColl)
+}
+
+part2()
