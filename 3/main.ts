@@ -37,47 +37,50 @@ function toClaim(line: string): Claim {
 
     return {
         id,
-        x: x,
-        y: y,
+        x,
+        y,
         width,
         height
     }
 }
 
-let fabrics = load()
-// console.log(c[0])
+function part1() {
+    const fabrics = load()
+    // console.log(c[0])
 
-// Define a 2D array for storing values.
-// Cache behaviour in TS/JS?
-let area: number[][] = []
-const size = 1000
-for (let x = 0; x < size; x++) {
-    area[x] = []
-    for (let y = 0; y < size; y++) {
-        area[x][y] = 0
-    }
-}
-
-// Iterate over all entries and fill array.
-for (const fabric of fabrics) {
-    // log(`Processing ${JSON.stringify(fabric)}`)
-    for (let x = fabric.x; x < fabric.x + fabric.width; x++) {
-        for (let y = fabric.y; y < fabric.y + fabric.height; y++) {
-            // log(`x=${x}/y=${y}`)
-            area[x][y]++
+    // Define a 2D array for storing values.
+    // Cache behaviour in TS/JS?
+    const area: number[][] = []
+    const size = 1000
+    for (let x = 0; x < size; x++) {
+        area[x] = []
+        for (let y = 0; y < size; y++) {
+            area[x][y] = 0
         }
     }
-}
 
-// Check how many inches overlap.
-// TODO filter approach over for-of loop?
-let overlap = 0
-for (let x = 0; x < size; x++) {
-    for (let y = 0; y < size; y++) {
-        if (area[x][y] > 1) {
-            overlap++
+    // Iterate over all entries and fill array.
+    for (const fabric of fabrics) {
+        // log(`Processing ${JSON.stringify(fabric)}`)
+        for (let x = fabric.x; x < fabric.x + fabric.width; x++) {
+            for (let y = fabric.y; y < fabric.y + fabric.height; y++) {
+                // log(`x=${x}/y=${y}`)
+                area[x][y]++
+            }
         }
     }
-}
-log(`Overlap ${overlap}`)
 
+    // Check how many inches overlap.
+    // TODO filter approach over for-of loop?
+    let overlap = 0
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size; y++) {
+            if (area[x][y] > 1) {
+                overlap++
+            }
+        }
+    }
+    log(`Overlap ${overlap}`)
+}
+
+part1()
