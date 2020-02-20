@@ -71,7 +71,6 @@ function part1() {
     }
 
     // Check how many inches overlap.
-    // TODO filter approach over for-of loop?
     let overlap = 0
     for (let x = 0; x < size; x++) {
         for (let y = 0; y < size; y++) {
