@@ -31,7 +31,7 @@ function toString(l: Line): string {
 function load() {
     const input = fs.readFileSync('input.txt', 'utf-8')
     return input.split("\n")
-        // .slice(0, 100)
+        // .slice(0, 10)
         .map(parseLine)
         .sort(compareDates)
 }
@@ -91,6 +91,22 @@ function parseLine(line: string): Line {
 }
 
 let sorted = load()
-sorted
-    .map(toString)
-    .forEach(log)
+const guards = new Map<string, Line[]>()
+let guard = ""
+sorted.forEach(line => {
+    const action = line.action
+    if (action.startsWith("Guard")) {
+        // Update current guard and initialize undefined list.
+        guard = action.split(" ")[1].substring(1)
+        let lines = guards.get(guard)
+        if (lines === undefined) {
+            guards.set(guard, [])
+        }
+    } else {
+        // Add line to guard list.
+        let lines = guards.get(guard)
+        lines?.push(line)
+    }
+})
+
+log(guards)
