@@ -160,14 +160,12 @@ if (guard !== undefined) {
 
     let start = 0
     for (let m of steps) {
-        // log(m)
         switch (m.action) {
             case Action.Sleep:
                 start = m.minute
                 break
             case Action.WakeUp:
                 let end = m.minute
-                log(start, end)
                 for (let i = start; i < end; i++) {
                     countMinutes[i]++
                 }
