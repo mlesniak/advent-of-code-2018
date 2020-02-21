@@ -19,19 +19,54 @@ interface Line {
 function load() {
     const input = fs.readFileSync('input.txt', 'utf-8')
     return input.split("\n")
-        .slice(0, 4)
+        .slice(0, 10)
         .map(parseLine)
+        .sort(compareDates)
 }
 
+function compareDates(a: Line, b: Line): number {
+    if (a.year < b.year) {
+        return -1
+    } else if (a.year > b.year) {
+        return 1
+    }
+
+    if (a.month < b.month) {
+        return -1
+    } else if (a.month > b.month) {
+        return 1
+    }
+
+    if (a.day < b.day) {
+        return -1
+    } else if (a.day > b.day) {
+        return 1
+    }
+
+    if (a.hour < b.hour) {
+        return -1
+    } else if (a.hour > b.hour) {
+        return 1
+    }
+
+    if (a.minute < b.minute) {
+        return -1
+    } else if (a.minute > b.minute) {
+        return 1
+    }
+
+    return 0
+}
+
+
 function parseLine(line: string): Line {
-    log(line)
     const re = new RegExp("^.(....)-(..)-(..) (..):(..). (.*)$")
     const match = re.exec(line)
     if (match === null) {
         throw new Error(`Parse error on ${line}`)
     }
 
-    const g: Line  = {
+    const g: Line = {
         year: Number(match[1]),
         month: Number(match[2]),
         day: Number(match[3]),
@@ -40,7 +75,8 @@ function parseLine(line: string): Line {
         action: match[6]
     }
 
-    log(g)
+    return g
 }
 
-load()
+let sorted = load()
+log(sorted)
