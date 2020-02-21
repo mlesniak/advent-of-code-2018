@@ -16,10 +16,22 @@ interface Line {
     action: string
 }
 
+function toString(l: Line): string {
+    function d2(s: number): string {
+        if (s < 10) {
+            return `0${s}`
+        }
+
+        return `${s}`
+    }
+
+    return `[${l.year}-${d2(l.month)}-${d2(l.day)} ${d2(l.hour)}:${d2(l.minute)}] ${l.action}`
+}
+
 function load() {
     const input = fs.readFileSync('input.txt', 'utf-8')
     return input.split("\n")
-        .slice(0, 10)
+        // .slice(0, 100)
         .map(parseLine)
         .sort(compareDates)
 }
@@ -79,4 +91,6 @@ function parseLine(line: string): Line {
 }
 
 let sorted = load()
-log(sorted)
+sorted
+    .map(toString)
+    .forEach(log)
