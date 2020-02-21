@@ -147,5 +147,44 @@ guards.forEach((v, k) => {
     }
 })
 
-log(guard)
-log(minutes)
+// Aggregated sleeping times.
+const countMinutes: number[] = []
+for(let i = 0; i < 60; i++) {
+    countMinutes[i] = 0
+}
+if (guard !== undefined) {
+    const steps = guards.get(guard)?.slice(1)
+    if (steps === undefined) {
+        throw new Error("This should not happen.")
+    }
+
+    let start = 0
+    for (let m of steps) {
+        // log(m)
+        switch (m.action) {
+            case Action.Sleep:
+                start = m.minute
+                break
+            case Action.WakeUp:
+                let end = m.minute
+                log(start, end)
+                for (let i = start; i < end; i++) {
+                    countMinutes[i]++
+                }
+                break
+        }
+    }
+}
+
+// Find maximal value at position.
+let pos = 0
+let max = 0
+for(let i = 0; i < 60; i++) {
+    if (countMinutes[i] > max) {
+        max = countMinutes[i]
+        pos = i
+    }
+}
+
+const guardID = Number(guard)
+log(guardID * pos)
