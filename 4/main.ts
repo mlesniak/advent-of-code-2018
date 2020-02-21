@@ -121,41 +121,13 @@ sorted.forEach(line => {
     }
 })
 
-// Find guard with most minutes asleep.
-let minutes = 0
-let guard: string | undefined = undefined
-guards.forEach((v, k) => {
-    let gm = 0
-
-    let start = 0
-    for (let m of v) {
-        switch (m.action) {
-            case Action.BeginShift:
-                break
-            case Action.Sleep:
-                start = m.minute
-                break
-            case Action.WakeUp:
-                gm += m.minute - start
-                break
-        }
-    }
-
-    if (minutes < gm) {
-        guard = k
-        minutes = gm
-    }
-})
-
-// Aggregated sleeping times.
-const countMinutes: number[] = []
-for(let i = 0; i < 60; i++) {
-    countMinutes[i] = 0
-}
-if (guard !== undefined) {
-    const steps = guards.get(guard)?.slice(1)
-    if (steps === undefined) {
-        throw new Error("This should not happen.")
+let countMinutes = new Map<string, number[]>()
+guards.forEach((steps, guard) => {
+    // Initialize array for guard.
+    let cm: number[] = []
+    countMinutes.set(guard, cm)
+    for(let i = 0; i < 60; i++) {
+        cm[i] = 0
     }
 
     let start = 0
@@ -167,22 +139,77 @@ if (guard !== undefined) {
             case Action.WakeUp:
                 let end = m.minute
                 for (let i = start; i < end; i++) {
-                    countMinutes[i]++
+                    cm[i]++
                 }
                 break
         }
     }
-}
+})
 
-// Find maximal value at position.
-let pos = 0
-let max = 0
-for(let i = 0; i < 60; i++) {
-    if (countMinutes[i] > max) {
-        max = countMinutes[i]
-        pos = i
-    }
-}
+log(countMinutes)
 
-const guardID = Number(guard)
-log(guardID * pos)
+// Find guard with most minutes asleep.
+// let minutes = 0
+// let guard: string | undefined = undefined
+// guards.forEach((v, k) => {
+//     let gm = 0
+
+//     let start = 0
+//     for (let m of v) {
+//         switch (m.action) {
+//             case Action.BeginShift:
+//                 break
+//             case Action.Sleep:
+//                 start = m.minute
+//                 break
+//             case Action.WakeUp:
+//                 gm += m.minute - start
+//                 break
+//         }
+//     }
+
+//     if (minutes < gm) {
+//         guard = k
+//         minutes = gm
+//     }
+// })
+
+// Aggregated sleeping times.
+// const countMinutes: number[] = []
+// for(let i = 0; i < 60; i++) {
+//     countMinutes[i] = 0
+// }
+// if (guard !== undefined) {
+//     const steps = guards.get(guard)?.slice(1)
+//     if (steps === undefined) {
+//         throw new Error("This should not happen.")
+//     }
+
+//     let start = 0
+//     for (let m of steps) {
+//         switch (m.action) {
+//             case Action.Sleep:
+//                 start = m.minute
+//                 break
+//             case Action.WakeUp:
+//                 let end = m.minute
+//                 for (let i = start; i < end; i++) {
+//                     countMinutes[i]++
+//                 }
+//                 break
+//         }
+//     }
+// }
+
+// // Find maximal value at position.
+// let pos = 0
+// let max = 0
+// for(let i = 0; i < 60; i++) {
+//     if (countMinutes[i] > max) {
+//         max = countMinutes[i]
+//         pos = i
+//     }
+// }
+
+// const guardID = Number(guard)
+// log(guardID * pos)
