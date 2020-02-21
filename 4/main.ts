@@ -121,6 +121,7 @@ sorted.forEach(line => {
     }
 })
 
+// Compute overall slept minutes per hour for each guard.
 let countMinutes = new Map<string, number[]>()
 guards.forEach((steps, guard) => {
     // Initialize array for guard.
@@ -146,7 +147,35 @@ guards.forEach((steps, guard) => {
     }
 })
 
-log(countMinutes)
+// Find guard with maximal number of slept minutes.
+// This can be abbreviated, but using this approach we can reuse code.
+let guard: string = ""
+let maxSleep = 0
+countMinutes.forEach((cm, g) => {
+    let max = Math.max(...cm)
+    if (maxSleep < max) {
+        maxSleep = max
+        guard = g
+    }
+})
+
+// Find maximal value at position.
+let pos = 0
+let max = 0
+let cm = countMinutes.get(guard)
+if (cm === undefined) {
+    throw new Error("This should never happen")
+}
+for(let i = 0; i < 60; i++) {
+    if (cm[i] > max) {
+        max = cm[i]
+        pos = i
+    }
+}
+
+const guardID = Number(guard)
+log(guardID * pos)
+
 
 // Find guard with most minutes asleep.
 // let minutes = 0
