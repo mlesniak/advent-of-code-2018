@@ -1,5 +1,6 @@
 import fs from 'fs'
 import log from './log'
+import { globalAgent } from 'http'
 
 enum Action {
     BeginShift,
@@ -7,7 +8,7 @@ enum Action {
     WakeUp
 }
 
-interface Guard {
+interface GuardInfo {
     year: number
     month: number
     day: number
@@ -18,7 +19,7 @@ interface Guard {
     action?: Action
 }
 
-function toString(l: Guard): string {
+function toString(l: GuardInfo): string {
     function d2(s: number): string {
         if (s < 10) {
             return `0${s}`
@@ -38,7 +39,7 @@ function load() {
         .sort(compareDates)
 }
 
-function compareDates(a: Guard, b: Guard): number {
+function compareDates(a: GuardInfo, b: GuardInfo): number {
     if (a.year < b.year) {
         return -1
     } else if (a.year > b.year) {
@@ -73,14 +74,14 @@ function compareDates(a: Guard, b: Guard): number {
 }
 
 
-function parseLine(line: string): Guard {
+function parseLine(line: string): GuardInfo {
     const re = new RegExp("^.(....)-(..)-(..) (..):(..). (.*)$")
     const match = re.exec(line)
     if (match === null) {
         throw new Error(`Parse error on ${line}`)
     }
 
-    const g: Guard = {
+    const g: GuardInfo = {
         year: Number(match[1]),
         month: Number(match[2]),
         day: Number(match[3]),
@@ -93,18 +94,18 @@ function parseLine(line: string): Guard {
 }
 
 let sorted = load()
-const guards = new Map<string, Guard[]>()
-let guard = ""
+const guards = new Map<string, GuardInfo[]>()
+let currentGuardId = ""
 sorted.forEach(line => {
     const action = line.actionDescription
     if (action.startsWith("Guard")) {
         // Update current guard and initialize undefined list.
-        guard = action.split(" ")[1].substring(1)
-        let lines = guards.get(guard)
+        currentGuardId = action.split(" ")[1].substring(1)
+        let lines = guards.get(currentGuardId)
         if (lines === undefined) {
             // Set action.
             line.action = Action.BeginShift
-            guards.set(guard, [line])
+            guards.set(currentGuardId, [line])
         }
     } else {
         // Set action.
@@ -115,9 +116,36 @@ sorted.forEach(line => {
         }
 
         // Add line to guard list.
-        let lines = guards.get(guard)
+        let lines = guards.get(currentGuardId)
         lines?.push(line)
     }
 })
 
-log(guards)
+// Find guard with most minutes asleep.
+let minutes = 0
+let guard: string | undefined = undefined
+guards.forEach((v, k) => {
+    let gm = 0
+
+    let start = 0
+    for (let m of v) {
+        switch (m.action) {
+            case Action.BeginShift:
+                break
+            case Action.Sleep:
+                start = m.minute
+                break
+            case Action.WakeUp:
+                gm += m.minute - start
+                break
+        }
+    }
+
+    if (minutes < gm) {
+        guard = k
+        minutes = gm
+    }
+})
+
+log(guard)
+log(minutes)
