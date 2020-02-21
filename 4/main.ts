@@ -7,16 +7,18 @@ enum Action {
     WakeUp
 }
 
-interface Line {
+interface Guard {
     year: number
     month: number
     day: number
     hour: number
     minute: number
-    action: string
+
+    actionDescription: string
+    action?: Action
 }
 
-function toString(l: Line): string {
+function toString(l: Guard): string {
     function d2(s: number): string {
         if (s < 10) {
             return `0${s}`
@@ -36,7 +38,7 @@ function load() {
         .sort(compareDates)
 }
 
-function compareDates(a: Line, b: Line): number {
+function compareDates(a: Guard, b: Guard): number {
     if (a.year < b.year) {
         return -1
     } else if (a.year > b.year) {
@@ -71,38 +73,47 @@ function compareDates(a: Line, b: Line): number {
 }
 
 
-function parseLine(line: string): Line {
+function parseLine(line: string): Guard {
     const re = new RegExp("^.(....)-(..)-(..) (..):(..). (.*)$")
     const match = re.exec(line)
     if (match === null) {
         throw new Error(`Parse error on ${line}`)
     }
 
-    const g: Line = {
+    const g: Guard = {
         year: Number(match[1]),
         month: Number(match[2]),
         day: Number(match[3]),
         hour: Number(match[4]),
         minute: Number(match[5]),
-        action: match[6]
+        actionDescription: match[6]
     }
 
     return g
 }
 
 let sorted = load()
-const guards = new Map<string, Line[]>()
+const guards = new Map<string, Guard[]>()
 let guard = ""
 sorted.forEach(line => {
-    const action = line.action
+    const action = line.actionDescription
     if (action.startsWith("Guard")) {
         // Update current guard and initialize undefined list.
         guard = action.split(" ")[1].substring(1)
         let lines = guards.get(guard)
         if (lines === undefined) {
-            guards.set(guard, [])
+            // Set action.
+            line.action = Action.BeginShift
+            guards.set(guard, [line])
         }
     } else {
+        // Set action.
+        if (action === "wakes up") {
+            line.action = Action.WakeUp
+        } else {
+            line.action = Action.Sleep
+        }
+
         // Add line to guard list.
         let lines = guards.get(guard)
         lines?.push(line)
