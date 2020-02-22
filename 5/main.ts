@@ -12,24 +12,28 @@ let input = load()
 // input = "abBA"
 // input = "aabAAB"
 
-let changed = true
-while (changed) {
-    // log(input)
-    changed = false
-    for (let i = 0; i < input.length - 1; i++) {
-        const a = input[i]
-        const b = input[i + 1]
+const n = applyPolymer(input)
+log(n)
 
-        if ((a.toLowerCase() === b && a === a.toUpperCase()) ||
-            (a.toUpperCase() === b && a === a.toLowerCase())) {
-            changed = true
-            // log("Found:", i)
-            const left = input.substr(0, i)
-            const right = input.substr(i + 2)
-            input = left + right
+
+function applyPolymer(input: string): number {
+    let changed = true
+    while (changed) {
+        // log(input)
+        changed = false
+        for (let i = 0; i < input.length - 1; i++) {
+            const a = input[i]
+            const b = input[i + 1]
+            if ((a.toLowerCase() === b && a === a.toUpperCase()) ||
+                (a.toUpperCase() === b && a === a.toLowerCase())) {
+                changed = true
+                // log("Found:", i)
+                const left = input.substr(0, i)
+                const right = input.substr(i + 2)
+                input = left + right
+            }
         }
     }
-}
 
-// log(input)
-log(input.length)
+    return input.length
+}
