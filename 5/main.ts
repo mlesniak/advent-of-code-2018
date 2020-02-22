@@ -12,8 +12,19 @@ let input = load()
 // input = "abBA"
 // input = "aabAAB"
 
-const n = applyPolymer(input)
-log(n)
+// Iterate over all chars.
+let min = input.length + 1
+for (const c of 'abcdefghijklmnopqrstuvwxyz') {
+    const re = new RegExp(c, 'gi')
+    const tmp = input.replace(re, '')
+    const n = applyPolymer(tmp)
+    log(c, n)
+    if (min > n) {
+        min = n
+    }
+}
+
+log(min)
 
 
 function applyPolymer(input: string): number {
