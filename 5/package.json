@@ -1,0 +1,19 @@
+{
+  "name": "advent-of-code-2018",
+  "version": "1.0.0",
+  "description": "Setup",
+  "main": "index.js",
+  "dependencies": {
+    "@types/node": "^13.7.1"
+  },
+  "devDependencies": {
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check": "tslint -c tslint.json './*.ts'"
+  },
+  "author": "",
+  "license": "ISC"
+}
